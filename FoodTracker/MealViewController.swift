@@ -15,12 +15,33 @@ class MealViewController: UIViewController, UITextFieldDelegate,
    @IBOutlet weak var nameTextField: UITextField!
    @IBOutlet weak var photoImageView: UIImageView!
    @IBOutlet weak var ratingControl: RatingControl!
+   @IBOutlet weak var saveButton: UIBarButtonItem!
+   
+   /*
+    This value is either passed by `MealTableViewController` in `prepareForSegue(_:sender:)`
+    or constructed as part of adding a new meal.
+    */
+   var meal: Meal?
 
    override func viewDidLoad() {
       super.viewDidLoad()
       
       // Handle the text field's user input through delegate callbacks.
       nameTextField.delegate = self
+   }
+   
+   // MARK: Navigation
+   
+   // This method lets you configure a view controller before it's presented.
+   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+      if saveButton === sender as AnyObject? {
+         let name = nameTextField.text ?? ""
+         let photo = photoImageView.image
+         let rating = ratingControl.rating
+         
+         // Set the meal to be passed to MealTableViewController after the unwind segue.
+         meal = Meal(name: name, photo: photo, rating: rating)
+      }
    }
    
    // MARK: Actions
