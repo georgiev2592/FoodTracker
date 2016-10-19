@@ -1,17 +1,17 @@
 //
-//  MealTableViewController.swift
+//  DrinkTableViewController.swift
 //  FoodTracker
 //
-//  Created by Petar Georgiev on 10/13/16.
+//  Created by Petar Georgiev on 10/18/16.
 //  Copyright © 2016 Petar Georgiev. All rights reserved.
 //
 
 import UIKit
 
-class MealTableViewController: UITableViewController {
+class DrinkTableViewController: UITableViewController {
    
    // MARK: Properties
-   var meals = [Meal]()
+   var drinks = [Drink]()
    
    override func viewDidLoad() {
       super.viewDidLoad()
@@ -20,25 +20,25 @@ class MealTableViewController: UITableViewController {
       navigationItem.leftBarButtonItem = editButtonItem
       
       // Load any saved meals, otherwise load sample data.
-      if let savedMeals = loadMeals() {
-         meals += savedMeals
+      if let savedDrinks = loadDrinks() {
+         drinks += savedDrinks
       } else {
          // Load the sample data.
-         loadSampleMeals()
+         loadSampleDrinks()
       }
    }
    
-   func loadSampleMeals() {
-      let photo1 = UIImage(named: "meal1")!
-      let meal1 = Meal(name: "Caprese Salad", photo: photo1, rating: 4)!
+   func loadSampleDrinks() {
+      let photo1 = UIImage(named: "drink1")!
+      let drink1 = Drink(name: "Mojito", photo: photo1, rating: 4)!
       
-      let photo2 = UIImage(named: "meal2")!
-      let meal2 = Meal(name: "Chicken and Potatoes", photo: photo2, rating: 5)!
+      let photo2 = UIImage(named: "drink2")!
+      let drink2 = Drink(name: "Stella Artois", photo: photo2, rating: 5)!
       
-      let photo3 = UIImage(named: "meal3")!
-      let meal3 = Meal(name: "Pasta with Meatballs", photo: photo3, rating: 3)!
+      let photo3 = UIImage(named: "drink3")!
+      let drink3 = Drink(name: "Cosmopolitan", photo: photo3, rating: 3)!
       
-      meals += [meal1, meal2, meal3]
+      drinks += [drink1, drink2, drink3]
    }
    
    override func didReceiveMemoryWarning() {
@@ -53,22 +53,22 @@ class MealTableViewController: UITableViewController {
    }
    
    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      return meals.count
+      return drinks.count
    }
    
    
    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
       // Table view cells are reused and should be dequeued using a cell identifier.
-      let cellIdentifier = "MealTableViewCell"
+      let cellIdentifier = "DrinkTableViewCell"
       
-      let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! MealTableViewCell
+      let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! DrinkTableViewCell
       
       // Fetches the appropriate meal for the data source layout.
-      let meal = meals[indexPath.row]
+      let drink = drinks[indexPath.row]
       
-      cell.nameLabel.text = meal.name
-      cell.photoImageView.image = meal.photo
-      cell.ratingControl.rating = meal.rating
+      cell.nameLabel.text = drink.name
+      cell.photoImageView.image = drink.photo
+      cell.ratingControl.rating = drink.rating
       
       return cell
    }
@@ -83,8 +83,8 @@ class MealTableViewController: UITableViewController {
    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
       if editingStyle == .delete {
          // Delete the row from the data source
-         meals.remove(at: indexPath.row)
-         saveMeals()
+         drinks.remove(at: indexPath.row)
+         saveDrinks()
          tableView.deleteRows(at: [indexPath], with: .fade)
       } else if editingStyle == .insert {
          // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
@@ -111,50 +111,50 @@ class MealTableViewController: UITableViewController {
    
    // In a storyboard-based application, you will often want to do a little preparation before navigation
    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-      if segue.identifier == "ShowMealDetail" {
-         let mealDetailViewController = segue.destination as! MealViewController
+      if segue.identifier == "ShowDrinkDetail" {
+         let drinkDetailViewController = segue.destination as! DrinkViewController
          // Get the cell that generated this segue.
-         if let selectedMealCell = sender as? MealTableViewCell {
-            let indexPath = tableView.indexPath(for: selectedMealCell)!
-            let selectedMeal = meals[indexPath.row]
-            mealDetailViewController.meal = selectedMeal
+         if let selectedDrinkCell = sender as? DrinkTableViewCell {
+            let indexPath = tableView.indexPath(for: selectedDrinkCell)!
+            let selectedDrink = drinks[indexPath.row]
+            drinkDetailViewController.drink = selectedDrink
          }
-      } else if segue.identifier == "AddMealItem" {
-         print("Adding new meal.")
+      } else if segue.identifier == "AddDrinkItem" {
+         print("Adding new drink.")
       }
    }
    
    
-   @IBAction func unwindToMealList(sender: UIStoryboardSegue) {
-      if let sourceViewController = sender.source as? MealViewController, let meal = sourceViewController.meal {
+   @IBAction func unwindToDrinkList(sender: UIStoryboardSegue) {
+      if let sourceViewController = sender.source as? DrinkViewController, let drink = sourceViewController.drink {
          
          if let selectedIndexPath = tableView.indexPathForSelectedRow {
-            // Update an existing meal.
-            meals[selectedIndexPath.row] = meal
+            // Update an existing drink.
+            drinks[selectedIndexPath.row] = drink
             tableView.reloadRows(at: [selectedIndexPath], with: .none)
          } else {
-            // Add a new meal.
-            let newIndexPath = NSIndexPath(row: meals.count, section: 0)
+            // Add a new drink.
+            let newIndexPath = NSIndexPath(row: drinks.count, section: 0)
             
-            meals.append(meal)
+            drinks.append(drink)
             tableView.insertRows(at: [newIndexPath as IndexPath], with: .bottom)
          }
-      
-         // Save the meals.
-         saveMeals()
+         
+         // Save the drinks.
+         saveDrinks()
       }
    }
    
    // MARK: NSCoding
-   func saveMeals() {
-      let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(meals, toFile: Meal.ArchiveURL.path)
-   
+   func saveDrinks() {
+      let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(drinks, toFile: Drink.ArchiveURL.path)
+      
       if !isSuccessfulSave {
-         print("Failed to save meals...")
+         print("Failed to save drinks...")
       }
    }
    
-   func loadMeals() -> [Meal]? {
-      return NSKeyedUnarchiver.unarchiveObject(withFile: Meal.ArchiveURL.path) as? [Meal]
+   func loadDrinks() -> [Drink]? {
+      return NSKeyedUnarchiver.unarchiveObject(withFile: Drink.ArchiveURL.path) as? [Drink]
    }
 }

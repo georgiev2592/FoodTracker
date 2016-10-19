@@ -1,15 +1,15 @@
 //
-//  MealViewController.swift
+//  DrinkViewController.swift
 //  FoodTracker
 //
-//  Created by Petar Georgiev on 10/8/16.
+//  Created by Petar Georgiev on 10/18/16.
 //  Copyright © 2016 Petar Georgiev. All rights reserved.
 //
 
 import UIKit
 
-class MealViewController: UIViewController, UITextFieldDelegate,
-   UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class DrinkViewController: UIViewController, UITextFieldDelegate,
+UIImagePickerControllerDelegate, UINavigationControllerDelegate {
    
    // MARK: Properties
    @IBOutlet weak var nameTextField: UITextField!
@@ -17,12 +17,13 @@ class MealViewController: UIViewController, UITextFieldDelegate,
    @IBOutlet weak var ratingControl: RatingControl!
    @IBOutlet weak var saveButton: UIBarButtonItem!
    
+   
    /*
     This value is either passed by `MealTableViewController` in `prepareForSegue(_:sender:)`
     or constructed as part of adding a new meal.
     */
-   var meal: Meal?
-
+   var drink: Drink?
+   
    override func viewDidLoad() {
       super.viewDidLoad()
       
@@ -30,25 +31,25 @@ class MealViewController: UIViewController, UITextFieldDelegate,
       nameTextField.delegate = self
       
       // Set up views if editing an existing Meal.
-      if let meal = meal {
-         navigationItem.title = meal.name
-         nameTextField.text   = meal.name
-         photoImageView.image = meal.photo
-         ratingControl.rating = meal.rating
+      if let drink = drink {
+         navigationItem.title = drink.name
+         nameTextField.text   = drink.name
+         photoImageView.image = drink.photo
+         ratingControl.rating = drink.rating
       }
       
       // Enable the Save button only if the text field has a valid Meal name.
-      checkValidMealName()
+      checkValidDrinkName()
    }
    
    // MARK: Navigation
-   @IBAction func cancelMeal(_ sender: UIBarButtonItem) {
-      print("In cancel meal")
+   @IBAction func cancelDrink(_ sender: UIBarButtonItem) {
+      print("In cancel drink")
       
       // Depending on style of presentation (modal or push presentation), this view controller needs to be dismissed in two different ways.
-      let isPresentingInAddMealMode = presentingViewController is UINavigationController
+      let isPresentingInAddDrinkMode = presentingViewController is UINavigationController
       
-      if isPresentingInAddMealMode {
+      if isPresentingInAddDrinkMode {
          print("In true")
          dismiss(animated: true, completion: nil)
       }
@@ -61,7 +62,6 @@ class MealViewController: UIViewController, UITextFieldDelegate,
       dismiss(animated: true, completion: nil)
    }
    
-   
    // This method lets you configure a view controller before it's presented.
    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
       if saveButton === sender as AnyObject? {
@@ -70,11 +70,12 @@ class MealViewController: UIViewController, UITextFieldDelegate,
          let rating = ratingControl.rating
          
          // Set the meal to be passed to MealTableViewController after the unwind segue.
-         meal = Meal(name: name, photo: photo, rating: rating)
+         drink = Drink(name: name, photo: photo, rating: rating)
       }
    }
    
    // MARK: Actions
+   
    @IBAction func selectImageFromPhotoLibrary(_ sender: UITapGestureRecognizer) {
       // Hide the keyboard
       nameTextField.resignFirstResponder()
@@ -104,14 +105,14 @@ class MealViewController: UIViewController, UITextFieldDelegate,
       saveButton.isEnabled = false
    }
    
-   func checkValidMealName() {
+   func checkValidDrinkName() {
       // Disable the Save button if the text field is empty.
       let text = nameTextField.text ?? ""
-      saveButton.isEnabled = !text.isEmpty
+      saveButton.isEnabled = true
    }
    
    func textFieldDidEndEditing(_ textField: UITextField) {
-      checkValidMealName()
+      checkValidDrinkName()
       navigationItem.title = textField.text
    }
    
@@ -132,4 +133,3 @@ class MealViewController: UIViewController, UITextFieldDelegate,
       dismiss(animated: true, completion: nil)
    }
 }
-
