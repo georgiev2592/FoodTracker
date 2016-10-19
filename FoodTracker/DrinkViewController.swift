@@ -77,6 +77,8 @@ UIImagePickerControllerDelegate, UINavigationControllerDelegate {
    // MARK: Actions
    
    @IBAction func selectImageFromPhotoLibrary(_ sender: UITapGestureRecognizer) {
+      print("In selectImageFromPhotoLibrary -> Drinks")
+      
       // Hide the keyboard
       nameTextField.resignFirstResponder()
       
